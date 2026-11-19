@@ -1,0 +1,6 @@
+fastapi
+pydantic
+numpy
+joblib
+xgboost
+pandas
