@@ -20,36 +20,35 @@ MODEL_DIR = os.path.join(BASE_DIR, "model")
 MODEL_PATH = os.path.join(MODEL_DIR, "model.json")
 FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
-def train_model():
-    # Load the dataset
-    df = pd.read_csv('monthly-car-sales.csv')
 
-    # Create lag features (sales from the last 6 months) from 1 month - 6 months
-    for i in range(1, 7):
-        df[f'lag_{i}'] = df['Sales'].shift(i)
+# Load the dataset
+df = pd.read_csv('monthly-car-sales.csv')
 
-    # Drop rows with NaN values resulting from shift operation
-    df_features = df.dropna().reset_index(drop=True)
+# Create lag features (sales from the last 6 months) from 1 month - 6 months
+for i in range(1, 7):
+    df[f'lag_{i}'] = df['Sales'].shift(i)
 
-    # Features are the 6 lag columns; target is the current Sales
-    X = df_features[[f'lag_{i}' for i in range(1, 7)]]
-    y = df_features['Sales']
+# Drop rows with NaN values resulting from shift operation
+df_features = df.dropna().reset_index(drop=True)
 
-    # Use XGBRegressor to train the model
-    model = XGBRegressor(n_estimators=100, max_depth=5, learning_rate=0.1, random_state=42)
-    model.fit(X, y)
+# Features are the 6 lag columns; target is the current Sales
+X = df_features[[f'lag_{i}' for i in range(1, 7)]]
+y = df_features['Sales']
 
-    os.makedirs(MODEL_DIR, exist_ok=True)
-    model.save_model(MODEL_PATH)
-    return model
+# Use XGBRegressor to train the model
+model = XGBRegressor(n_estimators=100, max_depth=5, learning_rate=0.1, random_state=42)
+model.fit(X, y)
 
-def load_or_train_model() -> XGBRegressor:
-    # Reuse the saved model if it exists; otherwise train and save it
-    if os.path.exists(MODEL_PATH):
-        model = XGBRegressor()
-        model.load_model(MODEL_PATH)
-        return model
-    return train_model()
+os.makedirs(MODEL_DIR, exist_ok=True)
+model.save_model(MODEL_PATH)
+
+
+
+# # Reuse the saved model if it exists; otherwise train and save it
+# if os.path.exists(MODEL_PATH):
+#     model = XGBRegressor()
+#     model.load_model(MODEL_PATH)
+
 
 
 # Initialize FastAPI app
