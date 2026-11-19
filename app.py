@@ -35,36 +35,36 @@ model.fit(X, y)
 model.get_booster().save_model("model/model.json")
 model.get_booster().save_model("frontend/index.html")
 
-# # Initialize FastAPI app
-# app = FastAPI()
+# Initialize FastAPI app
+app = FastAPI()
 
-# # Allow frontend (CORS)
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  # In production, replace with your frontend URL
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+# Allow frontend (CORS)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with your frontend URL
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# # Define request body schema
-# class SalesInput(BaseModel):
-#     sales: list[float]  # Expect exactly 6 values
+# Define request body schema
+class SalesInput(BaseModel):
+    sales: list[float]  # Expect exactly 6 values
 
 
-# # Mount the 'frontend' directory
-# app.mount("/static", StaticFiles(directory="frontend"), name="static")
+# Mount the 'frontend' directory
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
 
-# # Serve index.html at root
-# @app.get("/")
-# def serve_index():
-#     return FileResponse(os.path.join("frontend", "index.html"))
+# Serve index.html at root
+@app.get("/")
+def serve_index():
+    return FileResponse(os.path.join("frontend", "index.html"))
 
-# # Define the prediction endpoint
-# @app.post("/predict")
-# async def predict(input: SalesInput):
-#     if len(input.sales) != 6:
-#         return {"error": "Exactly 6 months of sales data required."}
+# Define the prediction endpoint
+@app.post("/predict")
+async def predict(input: SalesInput):
+    if len(input.sales) != 6:
+        return {"error": "Exactly 6 months of sales data required."}
     
-#     data = np.array(input.sales).reshape(1, -1)
-#     prediction = model.predict(data)[0]
-#     return {"prediction": float(prediction)}
+    data = np.array(input.sales).reshape(1, -1)
+    prediction = model.predict(data)[0]
+    return {"prediction": float(prediction)}
