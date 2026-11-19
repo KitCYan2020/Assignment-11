@@ -5,3 +5,6 @@ joblib
 xgboost
 pandas
 uvicorn
+numpy
+pandas
+scikit-learn
