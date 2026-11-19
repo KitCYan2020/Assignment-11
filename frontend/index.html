@@ -2,177 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Car Sales Forecast</title>
-  <style>
-    :root {
-      --bg: #f4f6fb;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --accent: #2563eb;
-      --accent-dark: #1d4ed8;
-      --border: #d1d5db;
-      --error: #b91c1c;
-      --result-bg: #eff6ff;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #111827;
-        --card: #1f2937;
-        --text: #f3f4f6;
-        --muted: #9ca3af;
-        --accent: #3b82f6;
-        --accent-dark: #2563eb;
-        --border: #374151;
-        --error: #f87171;
-        --result-bg: #172554;
-      }
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    }
-    .card {
-      width: 100%;
-      max-width: 440px;
-      background: var(--card);
-      border-radius: 14px;
-      padding: 2rem;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    }
-    h1 { margin: 0 0 0.25rem; font-size: 1.5rem; }
-    .subtitle { margin: 0 0 1.5rem; color: var(--muted); font-size: 0.95rem; }
-    .field { margin-bottom: 1rem; }
-    label { display: block; margin-bottom: 0.3rem; font-weight: 600; font-size: 0.9rem; }
-    input[type="number"] {
-      width: 100%;
-      padding: 0.65rem 0.8rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--card);
-      color: var(--text);
-      font-size: 1rem;
-    }
-    input[type="number"]:focus {
-      outline: 2px solid var(--accent);
-      border-color: transparent;
-    }
-    button {
-      width: 100%;
-      margin-top: 0.5rem;
-      padding: 0.8rem;
-      border: none;
-      border-radius: 8px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    button:hover:not(:disabled) { background: var(--accent-dark); }
-    button:disabled { opacity: 0.6; cursor: wait; }
-    #result {
-      display: none;
-      margin-top: 1.25rem;
-      padding: 1rem;
-      border-radius: 8px;
-      background: var(--result-bg);
-      text-align: center;
-    }
-    #result .label { color: var(--muted); font-size: 0.85rem; }
-    #result .value { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
-    #error {
-      display: none;
-      margin-top: 1.25rem;
-      color: var(--error);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-  </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Car Sales Forecast</h1>
-    <p class="subtitle">Enter the last 6 months of sales to predict next month.</p>
+  <h1>Car Sales Forecast</h1>
+  <p>Enter the last 6 months of sales to predict next month.</p>
 
-    <form id="predict-form" novalidate>
-      <div class="field">
-        <label for="m1">Sales 1 month ago</label>
-        <input type="number" id="m1" min="0" step="any" placeholder="e.g. 14577" required>
-      </div>
-      <div class="field">
-        <label for="m2">Sales 2 months ago</label>
-        <input type="number" id="m2" min="0" step="any" placeholder="e.g. 17180" required>
-      </div>
-      <div class="field">
-        <label for="m3">Sales 3 months ago</label>
-        <input type="number" id="m3" min="0" step="any" placeholder="e.g. 21342" required>
-      </div>
-      <div class="field">
-        <label for="m4">Sales 4 months ago</label>
-        <input type="number" id="m4" min="0" step="any" placeholder="e.g. 14385" required>
-      </div>
-      <div class="field">
-        <label for="m5">Sales 5 months ago</label>
-        <input type="number" id="m5" min="0" step="any" placeholder="e.g. 16722" required>
-      </div>
-      <div class="field">
-        <label for="m6">Sales 6 months ago</label>
-        <input type="number" id="m6" min="0" step="any" placeholder="e.g. 18024" required>
-      </div>
+  <form id="predict-form">
+    <p>Sales 1 month ago: <input type="number" id="m1" min="0" step="any" required></p>
+    <p>Sales 2 months ago: <input type="number" id="m2" min="0" step="any" required></p>
+    <p>Sales 3 months ago: <input type="number" id="m3" min="0" step="any" required></p>
+    <p>Sales 4 months ago: <input type="number" id="m4" min="0" step="any" required></p>
+    <p>Sales 5 months ago: <input type="number" id="m5" min="0" step="any" required></p>
+    <p>Sales 6 months ago: <input type="number" id="m6" min="0" step="any" required></p>
+    <button type="submit" id="submit-btn">Predict Next Month</button>
+  </form>
 
-      <button type="submit" id="submit-btn">Predict Next Month</button>
-    </form>
-
-    <div id="result">
-      <div class="label">Predicted sales for next month</div>
-      <div class="value" id="prediction"></div>
-    </div>
-    <div id="error"></div>
-  </div>
+  <h2 id="result"></h2>
 
   <script>
     const form = document.getElementById("predict-form");
     const btn = document.getElementById("submit-btn");
-    const resultBox = document.getElementById("result");
-    const predictionEl = document.getElementById("prediction");
-    const errorEl = document.getElementById("error");
-
-    function showError(msg) {
-      resultBox.style.display = "none";
-      errorEl.textContent = msg;
-      errorEl.style.display = "block";
-    }
+    const result = document.getElementById("result");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      errorEl.style.display = "none";
-      resultBox.style.display = "none";
+      result.textContent = "";
 
       // Order matters: index 0 = 1 month ago (lag_1), ..., index 5 = 6 months ago (lag_6)
       const sales = [];
       for (let i = 1; i <= 6; i++) {
-        const raw = document.getElementById("m" + i).value.trim();
-        const val = Number(raw);
-        if (raw === "" || !Number.isFinite(val) || val < 0) {
-          showError("Please enter a valid non-negative number for every month.");
-          return;
-        }
-        sales.push(val);
+        sales.push(Number(document.getElementById("m" + i).value));
       }
 
       btn.disabled = true;
-      btn.textContent = "Predicting...";
-
       try {
         const response = await fetch("/predict", {
           method: "POST",
@@ -180,18 +43,15 @@
           body: JSON.stringify({ sales })
         });
         const data = await response.json();
-
         if (!response.ok || data.error) {
-          showError(data.error || data.detail || "Something went wrong.");
+          result.textContent = "Error: " + (data.error || data.detail || "Something went wrong.");
         } else {
-          predictionEl.textContent = Math.round(data.prediction).toLocaleString();
-          resultBox.style.display = "block";
+          result.textContent = "Predicted sales for next month: " + Math.round(data.prediction).toLocaleString();
         }
       } catch (err) {
-        showError("Could not reach the server. If it just woke up, wait a minute and try again.");
+        result.textContent = "Could not reach the server. Wait a minute and try again.";
       } finally {
         btn.disabled = false;
-        btn.textContent = "Predict Next Month";
       }
     });
   </script>
